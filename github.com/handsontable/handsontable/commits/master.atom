@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:/handsontable/handsontable/commits/master</id>
+  <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commits/master"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/handsontable/handsontable/commits/master.atom"/>
+  <title>Recent Commits to handsontable:master</title>
+  <updated>2017-09-13T09:18:42Z</updated>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/7362ea024667937dfabf626bd73dce4e2d8cf2de</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/7362ea024667937dfabf626bd73dce4e2d8cf2de"/>
+    <title>
+        Merge branch &#39;release/0.34.4&#39;
+    </title>
+    <updated>2017-09-13T09:18:42Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;release/0.34.4&amp;#39;&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/26afec8306bbfd20f59306274e4fadaa976fd440</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/26afec8306bbfd20f59306274e4fadaa976fd440"/>
+    <title>
+        0.34.4
+    </title>
+    <updated>2017-09-13T09:18:31Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;0.34.4&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/9089411730d73fa4b424670840d3dd7c3a01017d</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/9089411730d73fa4b424670840d3dd7c3a01017d"/>
+    <title>
+        Added missing import. #4514
+    </title>
+    <updated>2017-09-13T08:41:32Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars2.githubusercontent.com/u/571316?v=4&amp;s=30"/>
+    <author>
+      <name>budnix</name>
+      <uri>https://github.com/budnix</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Added missing import. #4514&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/93cfa19f3efc3c6b129c456df22f8949ccd4bc1d</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/93cfa19f3efc3c6b129c456df22f8949ccd4bc1d"/>
+    <title>
+        Merge branch &#39;release/0.34.3&#39; into develop
+    </title>
+    <updated>2017-09-12T11:30:02Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;release/0.34.3&amp;#39; into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/aa835fa018064449f427d1c2d15fc6e02450c8e6</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/aa835fa018064449f427d1c2d15fc6e02450c8e6"/>
+    <title>
+        Merge branch &#39;release/0.34.3&#39;
+    </title>
+    <updated>2017-09-12T11:29:58Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;release/0.34.3&amp;#39;&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/7adde55ffe10c4056c75cfe2a5b344c7e36788ab</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/7adde55ffe10c4056c75cfe2a5b344c7e36788ab"/>
+    <title>
+        0.34.3
+    </title>
+    <updated>2017-09-12T11:29:35Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;0.34.3&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/ffd0341ae5072730b22a9d217c635b29b2fa8fbf</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/ffd0341ae5072730b22a9d217c635b29b2fa8fbf"/>
+    <title>
+        Fixed license element destroy
+    </title>
+    <updated>2017-09-12T11:10:40Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars2.githubusercontent.com/u/571316?v=4&amp;s=30"/>
+    <author>
+      <name>budnix</name>
+      <uri>https://github.com/budnix</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Fixed license element destroy&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/20de7af6afe9bde8aa3a1fc88b716fddbff93154</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/20de7af6afe9bde8aa3a1fc88b716fddbff93154"/>
+    <title>
+        Merge branch &#39;develop&#39; of https://github.com/handsontable/handsontabl…
+    </title>
+    <updated>2017-09-12T08:13:06Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;develop&amp;#39; of https://github.com/handsontable/handsontable into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/d0cb6cbf3c578476db02547b42c8e9b38aca9278</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/d0cb6cbf3c578476db02547b42c8e9b38aca9278"/>
+    <title>
+        Merge branch &#39;release/0.34.2&#39; into develop
+    </title>
+    <updated>2017-09-12T08:12:30Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;release/0.34.2&amp;#39; into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/aa74d2aed86f0394c576729a841b0410bdb2a7da</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/aa74d2aed86f0394c576729a841b0410bdb2a7da"/>
+    <title>
+        Merge branch &#39;release/0.34.2&#39;
+    </title>
+    <updated>2017-09-12T08:12:24Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;release/0.34.2&amp;#39;&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/1e18f551fc806bff459a217684a91c29534f62ce</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/1e18f551fc806bff459a217684a91c29534f62ce"/>
+    <title>
+        Fixes #4304 (#4401)
+    </title>
+    <updated>2017-09-12T06:42:05Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/27179132?v=4&amp;s=30"/>
+    <author>
+      <name>jeremy-smith-maco</name>
+      <uri>https://github.com/jeremy-smith-maco</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Fixes #4304 (#4401)
+
+* Fixes #4304
+
+* Added tests for #4304&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/94f9221bfefe3b2895d7fa7e70f62fe9c4a27f89</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/94f9221bfefe3b2895d7fa7e70f62fe9c4a27f89"/>
+    <title>
+        0.34.2
+    </title>
+    <updated>2017-09-11T12:54:57Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;0.34.2&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/d496eabd50f13c51c1225c8147faa2dc75681cc0</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/d496eabd50f13c51c1225c8147faa2dc75681cc0"/>
+    <title>
+        0.34.2
+    </title>
+    <updated>2017-09-11T12:43:40Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;0.34.2&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/142df16f7203ae811c9f63a29f18ac93bdcc0929</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/142df16f7203ae811c9f63a29f18ac93bdcc0929"/>
+    <title>
+        Merge branch &#39;develop&#39; of https://github.com/handsontable/handsontabl…
+    </title>
+    <updated>2017-09-11T11:44:21Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/7397134?v=4&amp;s=30"/>
+    <author>
+      <name>jansiegel</name>
+      <uri>https://github.com/jansiegel</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;develop&amp;#39; of https://github.com/handsontable/handsontable into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/a4deb67b636f579bfdd0f42f26c11fe35ccc4d86</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/a4deb67b636f579bfdd0f42f26c11fe35ccc4d86"/>
+    <title>
+        Merge branch &#39;feature/issue-4508&#39; into develop
+    </title>
+    <updated>2017-09-11T11:43:58Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/11849621?v=4&amp;s=30"/>
+    <author>
+      <name>swistach</name>
+      <uri>https://github.com/swistach</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;feature/issue-4508&amp;#39; into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/57abb0cf58ecab390396c51b6ec641a910dd64d2</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/57abb0cf58ecab390396c51b6ec641a910dd64d2"/>
+    <title>
+        Merge branch &#39;feature/issue-4496&#39; into develop
+    </title>
+    <updated>2017-09-11T11:41:45Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/11849621?v=4&amp;s=30"/>
+    <author>
+      <name>swistach</name>
+      <uri>https://github.com/swistach</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Merge branch &amp;#39;feature/issue-4496&amp;#39; into develop&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/88283b3c703b6c11032a9783499974cb3b814eee</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/88283b3c703b6c11032a9783499974cb3b814eee"/>
+    <title>
+        Fix: test() in hasClass helper. #4508
+    </title>
+    <updated>2017-09-11T11:40:00Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/11849621?v=4&amp;s=30"/>
+    <author>
+      <name>swistach</name>
+      <uri>https://github.com/swistach</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Fix: test() in hasClass helper. #4508&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/04cbbcbecdceedb679828b9f3a1987e37ffab23e</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/04cbbcbecdceedb679828b9f3a1987e37ffab23e"/>
+    <title>
+        Added &amp; change: test for manual moving + change in test config. #4496
+    </title>
+    <updated>2017-09-11T11:15:19Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/11849621?v=4&amp;s=30"/>
+    <author>
+      <name>swistach</name>
+      <uri>https://github.com/swistach</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Added &amp;amp; change: test for manual moving + change in test config. #4496&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/f0aff611f53687497b5b289ccd528d684449317d</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/f0aff611f53687497b5b289ccd528d684449317d"/>
+    <title>
+        Fix: manualColumnMove backlight. #4496
+    </title>
+    <updated>2017-09-08T15:48:17Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars0.githubusercontent.com/u/11849621?v=4&amp;s=30"/>
+    <author>
+      <name>swistach</name>
+      <uri>https://github.com/swistach</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Fix: manualColumnMove backlight. #4496&lt;/pre&gt;
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/d20547903367a8349a6a4d339953aaad27d65c2e</id>
+    <link type="text/html" rel="alternate" href="https://github.com/handsontable/handsontable/commit/d20547903367a8349a6a4d339953aaad27d65c2e"/>
+    <title>
+        Fixed default export issue. #4495
+    </title>
+    <updated>2017-09-08T13:46:15Z</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars2.githubusercontent.com/u/571316?v=4&amp;s=30"/>
+    <author>
+      <name>budnix</name>
+      <uri>https://github.com/budnix</uri>
+    </author>
+    <content type="html">
+      &lt;pre style=&#39;white-space:pre-wrap;width:81ex&#39;&gt;Fixed default export issue. #4495&lt;/pre&gt;
+    </content>
+  </entry>
+</feed>

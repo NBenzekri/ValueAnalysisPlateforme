@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<html lang="fr">
+
+<head>
+
+
+<!-- Organigramme technique produit   -->
+<script src="go.js"></script>
+<!--link href="../gojs/assets/css/goSamples.css" rel="stylesheet" type="text/css"/>  <!-- you don't need to use this -->
+<!-- script src="goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
+
+<link rel='stylesheet' href='../gojs/g/extensions/dataInspector.css' />
+<script src="../gojs/extensions/dataInspector.js"></script>
+
+<script id="code">
+  function init() {
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+    var $ = go.GraphObject.make;  // for conciseness in defining templates
+
+    myDiagram =
+      $(go.Diagram, "myDiagramDiv", // must be the ID or reference to div
+        {
+          initialContentAlignment: go.Spot.Center,
+          // make sure users can only create trees
+          validCycle: go.Diagram.CycleDestinationTree,
+          // users can select only one part at a time
+          maxSelectionCount: 1,
+          layout:
+            $(go.TreeLayout,
+              {
+                treeStyle: go.TreeLayout.StyleLastParents,
+                arrangement: go.TreeLayout.ArrangementHorizontal,
+                // properties for most of the tree:
+                angle: 90,
+                layerSpacing: 35,
+                // properties for the "last parents":
+                alternateAngle: 90,
+                alternateLayerSpacing: 35,
+                alternateAlignment: go.TreeLayout.AlignmentBus,
+                alternateNodeSpacing: 20
+              }),
+          // enable undo & redo
+          "undoManager.isEnabled": true
+        });
+
+    // when the document is modified, add a "*" to the title and enable the "Save" button
+    myDiagram.addDiagramListener("Modified", function(e) {
+      var button = document.getElementById("SaveButton");
+      if (button) button.disabled = !myDiagram.isModified;
+      var idx = document.title.indexOf("*");
+      if (myDiagram.isModified) {
+        if (idx < 0) document.title += "*";
+      } else {
+        if (idx >= 0) document.title = document.title.substr(0, idx);
+      }
+    });
+
+    var levelColors = ["#AC193D/#BF1E4B", "#2672EC/#2E8DEF", "#8C0095/#A700AE", "#5133AB/#643EBF",
+                       "#008299/#00A0B1", "#D24726/#DC572E", "#008A00/#00A600", "#094AB2/#0A5BC4"];
+
+    // override TreeLayout.commitNodes to also modify the background brush based on the tree depth level
+    myDiagram.layout.commitNodes = function() {
+      go.TreeLayout.prototype.commitNodes.call(myDiagram.layout);  // do the standard behavior
+      // then go through all of the vertexes and set their corresponding node's Shape.fill
+      // to a brush dependent on the TreeVertex.level value
+      myDiagram.layout.network.vertexes.each(function(v) {
+        if (v.node) {
+          var level = v.level % (levelColors.length);
+          var colors = levelColors[level].split("/");
+          var shape = v.node.findObject("SHAPE");
+          if (shape) shape.fill = $(go.Brush, "Linear", { 0: colors[0], 1: colors[1], start: go.Spot.Left, end: go.Spot.Right });
+        }
+      });
+    }
+
+    // when a node is double-clicked, add a child to it
+    function nodeDoubleClick(e, obj) {
+      var clicked = obj.part;
+      if (clicked !== null) {
+        var thisemp = clicked.data;
+        myDiagram.startTransaction("add employee");
+        var nextkey = (myDiagram.model.nodeDataArray.length + 1).toString();
+        var newemp = { key: nextkey, name: "(new person)", title: "", parent: thisemp.key };
+        myDiagram.model.addNodeData(newemp);
+        myDiagram.commitTransaction("add employee");
+      }
+    }
+
+    // this is used to determine feedback during drags
+    function mayWorkFor(node1, node2) {
+      if (!(node1 instanceof go.Node)) return false;  // must be a Node
+      if (node1 === node2) return false;  // cannot work for yourself
+      if (node2.isInTreeOf(node1)) return false;  // cannot work for someone who works for you
+      return true;
+    }
+
+    // This function provides a common style for most of the TextBlocks.
+    // Some of these values may be overridden in a particular TextBlock.
+    function textStyle() {
+      return { font: "9pt  Segoe UI,sans-serif", stroke: "white" };
+    }
+
+    // This converter is used by the Picture.
+    function findHeadShot(key) {
+      if (key > 16) return ""; // There are only 16 images on the server
+      return "images/HS" + key + ".png"
+    };
+
+
+    // define the Node template
+    myDiagram.nodeTemplate =
+      $(go.Node, "Auto",
+        { doubleClick: nodeDoubleClick },
+        { // handle dragging a Node onto a Node to (maybe) change the reporting relationship
+          mouseDragEnter: function (e, node, prev) {
+            var diagram = node.diagram;
+            var selnode = diagram.selection.first();
+            if (!mayWorkFor(selnode, node)) return;
+            var shape = node.findObject("SHAPE");
+            if (shape) {
+              shape._prevFill = shape.fill;  // remember the original brush
+              shape.fill = "darkred";
+            }
+          },
+          mouseDragLeave: function (e, node, next) {
+            var shape = node.findObject("SHAPE");
+            if (shape && shape._prevFill) {
+              shape.fill = shape._prevFill;  // restore the original brush
+            }
+          },
+          mouseDrop: function (e, node) {
+            var diagram = node.diagram;
+            var selnode = diagram.selection.first();  // assume just one Node in selection
+            if (mayWorkFor(selnode, node)) {
+              // find any existing link into the selected node
+              var link = selnode.findTreeParentLink();
+              if (link !== null) {  // reconnect any existing link
+                link.fromNode = node;
+              } else {  // else create a new link
+                diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
+              }
+            }
+          }
+        },
+        // for sorting, have the Node.text be the data.name
+        new go.Binding("text", "name"),
+        // bind the Part.layerName to control the Node's layer depending on whether it isSelected
+        new go.Binding("layerName", "isSelected", function(sel) { return sel ? "Foreground" : ""; }).ofObject(),
+        // define the node's outer shape
+        $(go.Shape, "Rectangle",
+          {
+            name: "SHAPE", fill: "white", stroke: null,
+            // set the port properties:
+            portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
+          }),
+        $(go.Panel, "Horizontal",
+          $(go.Picture,
+            {
+              name: 'Picture',
+              desiredSize: new go.Size(39, 50),
+              margin: new go.Margin(6, 8, 6, 10),
+            },
+            new go.Binding("source", "key", findHeadShot)),
+          // define the panel where the text will appear
+          $(go.Panel, "Table",
+            {
+              maxSize: new go.Size(150, 999),
+              margin: new go.Margin(6, 10, 0, 3),
+              defaultAlignment: go.Spot.Left
+            },
+            $(go.RowColumnDefinition, { column: 2, width: 4 }),
+            $(go.TextBlock, textStyle(),  // the name
+              {
+                row: 0, column: 0, columnSpan: 5,
+                font: "12pt Segoe UI,sans-serif",
+                editable: true, isMultiline: false,
+                minSize: new go.Size(10, 16)
+              },
+              new go.Binding("text", "name").makeTwoWay()),
+            $(go.TextBlock, "Achats: ", textStyle(),
+              { row: 1, column: 0 }),
+            $(go.TextBlock, textStyle(),
+              {
+                row: 1, column: 1, columnSpan: 4,
+                editable: true, isMultiline: true,
+                minSize: new go.Size(10, 14),
+                margin: new go.Margin(0, 0, 0, 3)
+              },
+              new go.Binding("text", "Achats").makeTwoWay()),
+            $(go.TextBlock, textStyle(),
+              { row: 3, column: 0 , columnSpan: 4,
+                editable: true, isMultiline: true,
+                minSize: new go.Size(10, 14),
+                margin: new go.Margin(0, 0, 0, 2)},              
+              new go.Binding("text", "Quantité", function(v) {return "Quantité: " + v;})),  
+            $(go.TextBlock, textStyle(),
+              { row: 4, column: 0 , columnSpan: 4,
+                editable: true, isMultiline: true,
+                minSize: new go.Size(10, 14),
+                margin: new go.Margin(0, 0, 0, 2)},              
+              new go.Binding("text", "Poids", function(v) {return "Poids: " + v;})),                          
+            $(go.TextBlock, textStyle(),
+              { row: 2, column: 0 },              
+              new go.Binding("text", "key", function(v) {return "ID: " + v;})),
+            $(go.TextBlock, textStyle(),
+              { row: 2, column: 3, },
+              new go.Binding("text", "parent", function(v) {return "Coût: " + v;})),
+            $(go.TextBlock, textStyle(),  // the comments
+              {
+                row: 3, column: 0, columnSpan: 5,
+                font: "italic 9pt sans-serif",
+                wrap: go.TextBlock.WrapFit,
+                editable: true,  // by default newlines are allowed
+                minSize: new go.Size(10, 14)
+              },
+              new go.Binding("text", "comments").makeTwoWay())
+          )  // end Table Panel
+        ) // end Horizontal Panel
+      );  // end Node
+
+    // define the Link template
+    myDiagram.linkTemplate =
+      $(go.Link, go.Link.Orthogonal,
+        { corner: 5, relinkableFrom: true, relinkableTo: true },
+        $(go.Shape, { strokeWidth: 4, stroke: "#00a4a4" }));  // the link shape
+
+    // read in the JSON-format data from the "mySavedModel" element
+    load();
+
+
+    // support editing the properties of the selected person in HTML
+    if (window.Inspector) myInspector = new Inspector('myInspector', myDiagram,
+      {
+        properties: {
+          'key': { readOnly: true },
+          'comments': {}
+        }
+      });
+  }
+
+
+
+  // Show the diagram's model in JSON format
+  function save() {
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+  }
+</script>
+
+
+<!-- -->
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        
+    <meta name="description" content="" />
+  <link rel="dns-prefetch" href="https://assets-cdn.github.com/">
+  <link rel="dns-prefetch" href="https://avatars0.githubusercontent.com/">
+  <link rel="dns-prefetch" href="https://avatars1.githubusercontent.com/">
+  <link rel="dns-prefetch" href="https://avatars2.githubusercontent.com/">
+  <link rel="dns-prefetch" href="https://avatars3.githubusercontent.com/">
+  <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com/">
+  <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/">
+
+
+
+  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/frameworks-bedfc518345498ab3204d330c1727cde7e733526a09cd7df6867f6a231565091.css" media="all" rel="stylesheet" />
+  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/github-a1f1041276ec59b7ad51bdbd35d2d73f15f99aebe2686a60e9cd9f705b57d220.css" media="all" rel="stylesheet" />
+  
+  
+  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/site-877643c520258c4fa15ac8d1664d84efd0e3db56f5e544ccac58da0e50489904.css" media="all" rel="stylesheet" />
+  
+
+  <meta name="viewport" content="width=device-width">
+  
+  <title>AV · Organigramme technique produit</title>
+  <link rel="search" type="application/opensearchdescription+xml" href="opensearch.xml" title="GitHub">
+  <link rel="fluid-icon" href="fluidicon.png" title="GitHub">
+  <meta property="fb:app_id" content="1401488693436528">
+
+    
+    <meta content="https://github.com/opengraph.png" property="og:image" /><meta content="GitHub" property="og:site_name" /><meta content="object" property="og:type" /><meta content="GitHub Marketplace" property="og:title" /><meta content="https://github.com/marketplace" property="og:url" /><meta content="GitHub integrates with hundreds of applications and services that help you and your team build software better, together." property="og:description" />
+
+  <link rel="assets" href="https://assets-cdn.github.com/">
+  
+  <meta name="pjax-timeout" content="1000">
+  
+  <meta name="request-id" content="EDC5:0C52:4BE0A52:81ABDB2:59C81979" data-pjax-transient>
+  
+
+  <meta name="selected-link" value="/marketplace" data-pjax-transient>
+
+  <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
+<meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
+    <meta name="google-analytics" content="UA-3769691-2">
+
+<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="https://collector.githubapp.com/github-external/browser_event" name="octolytics-event-url" /><meta content="EDC5:0C52:4BE0A52:81ABDB2:59C81979" name="octolytics-dimension-request_id" /><meta content="iad" name="octolytics-dimension-region_edge" /><meta content="iad" name="octolytics-dimension-region_render" />
+
+
+
+
+
+  <meta class="js-ga-set" name="dimension1" content="Logged Out">
+
+
+  
+
+      <meta name="hostname" content="github.com">
+  <meta name="user-login" content="">
+
+      <meta name="expected-hostname" content="github.com">
+    <meta name="js-proxy-site-detection-payload" content="NGJlNzdhZTM4NjM4Yjg5OTdjNDE1NWVjMjM3NTE0OTBlOGJmOTg5M2IwMjY0M2JjMmJiYTYzOTlhMjRkNTdiNHx7InJlbW90ZV9hZGRyZXNzIjoiNDEuMjUwLjE2NS4xNiIsInJlcXVlc3RfaWQiOiJFREM1OjBDNTI6NEJFMEE1Mjo4MUFCREIyOjU5QzgxOTc5IiwidGltZXN0YW1wIjoxNTA2Mjg1OTQ2LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
+
+
+  <meta name="html-safe-nonce" content="c6346ba7bf44c1b7ff3289b3cf3a071898ac6b67">
+
+  <meta http-equiv="x-pjax-version" content="91fbc80bd47c6773a7a0b82ce6f50214">
+  
+
+      <meta name="viewport" content="width=device-width">
+  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/site-877643c520258c4fa15ac8d1664d84efd0e3db56f5e544ccac58da0e50489904.css" media="all" rel="stylesheet" />
+
+
+
+
+  <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
+
+  <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
+
+  <link rel="mask-icon" href="https://assets-cdn.github.com/pinned-octocat.svg" color="#000000">
+  <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+
+<meta name="theme-color" content="#1e2327">
+
+
+
+  </head>
+
+  <body class="logged-out env-production min-width-0 page-responsive" onload="init()">
+    
+
+  <div class="position-relative js-header-wrapper ">
+    <a href="#start-of-content" tabindex="1" class="px-2 py-4 show-on-focus js-skip-to-content">Skip to content</a>
+    <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
+
+    
+    
+    
+
+
+
+        <header class="Header header-logged-out js-details-container Details position-relative f4 py-3" role="banner">
+  <div class="container-lg d-lg-flex p-responsive">
+    <div class="d-flex flex-justify-between flex-items-center">
+      <a class="header-logo-invertocat my-0" href="index.html" aria-label="Homepage" data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
+        <svg aria-hidden="true" class="octicon octicon-mark-github" height="32" version="1.1" viewBox="0 0 16 16" width="32"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+
+        <button class="btn-link d-lg-none mt-1 js-details-target" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <svg aria-hidden="true" class="octicon octicon-three-bars text-white" height="24" version="1.1" viewBox="0 0 12 16" width="18"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"/></svg>
+        </button>
+    </div>
+
+    <div class="HeaderMenu HeaderMenu--bright d-lg-flex flex-justify-between flex-auto">
+        <nav class="mt-3 mt-lg-0">
+          <ul class="d-lg-flex list-style-none">
+              <li class="ml-lg-2">
+                <a href="features.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:features" data-selected-links="/features /features/project-management /features/code-review /features/project-management /features/integrations /features">
+                  Features
+</a>              </li>
+              <li class="ml-lg-4">
+                <a href="business.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:business" data-selected-links="/business /business/security /business/customers /business">
+                  Business
+</a>              </li>
+
+              <li class="ml-lg-4">
+                <a href="explore.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:explore" data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore">
+                  Explore
+</a>              </li>
+
+              <li class="ml-lg-4">
+                    <a href="marketplace.html" class="js-selected-navigation-item selected HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:marketplace" data-selected-links=" /marketplace">
+                      Marketplace
+</a>              </li>
+              <li class="ml-lg-4">
+                <a href="pricing.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:pricing" data-selected-links="/pricing /pricing/developer /pricing/team /pricing/business-hosted /pricing/business-enterprise /pricing">
+                  Pricing
+</a>              </li>
+          </ul>
+        </nav>
+
+      <div class="d-lg-flex">
+          <div class="d-lg-flex flex-items-center mr-lg-3">
+            <div class="header-search   js-site-search" role="search">
+  <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="https://github.com/search" class="js-site-search-form" data-unscoped-search-url="/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+    <label class="form-control header-search-wrapper js-chromeless-input-container">
+        <a href="marketplace.html" class="header-search-scope no-underline">/marketplace</a>
+      <input type="text"
+        class="form-control header-search-input js-site-search-focus "
+        data-hotkey="s"
+        name="q"
+        value=""
+        placeholder="Search GitHub"
+        aria-label="Search GitHub"
+        data-unscoped-placeholder="Search GitHub"
+        data-scoped-placeholder="Search"
+        autocapitalize="off">
+        <input type="hidden" class="js-site-search-type-field" name="type" >
+    </label>
+</form></div>
+
+          </div>
+
+        <span class="d-block d-lg-inline-block">
+            <div class="HeaderNavlink px-0 py-2 m-0">
+              <a class="text-bold text-white no-underline" href="login5a87.html?return_to=%2Fmarketplace" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">Se connecter</a>
+                <span class="text-gray">or</span>
+                <a class="text-bold text-white no-underline" href="joinaebb.html?source=header" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up">S'inscrire</a>
+            </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+    <div id="js-flash-container">
+</div>
+
+
+
+  <div role="main">
+        
+
+       <div itemscope itemtype="http://schema.org/SoftwareSourceCode">
+    <div id="js-repo-pjax-container" data-pjax-container>
+      
+
+
+  
+
+
+
+    <div class="pagehead repohead instapaper_ignore readability-menu experiment-repo-nav">
+      <div class="container repohead-details-container">
+
+        <h1 class="public ">
+  <svg aria-hidden="true" class="octicon octicon-repo" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"/></svg>
+  <span class="author" itemprop="author"><a href="eoa.html" class="url fn" rel="aulthor">Recherche d'informations</a></span>
+
+</h1>
+
+      </div>
+      <div class="container">
+        
+ 
+
+      </div>
+    </div>
+
+<div class="container new-discussion-timeline experiment-repo-nav">
+  <div class="repository-content">
+
+    
+      <div class="signup-prompt-bg rounded-1">
+      <div class="signup-prompt p-4 text-center mb-4 rounded-1">
+        <div class="position-relative">
+      
+</form>
+          <h3 class="pt-2">Organigramme technique produit</h3>
+          <p class="col-6 mx-auto">Il permet de présenter l'organigramme produit de ce qui est attendu. Cette approche permet aux différents participants du projet de comprendre plus aisément la complexité de la réalisation à mettre en œuvre</p>
+          <p class="pb-2">
+
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+</div>
+
+    </div>
+  <div class="container new-discussion-timeline experiment-repo-nav">
+  <div class="repository-content">
+
+    
+  <div id="wiki-wrapper" class="wiki-wrapper page">
+  <div class="gh-header">
+    <div class="gh-header-show">
+      <h1 class="gh-header-title instapaper_title"></h1>
+        <div class="gh-header-meta">
+         
+          <a href="/handsontable/handsontable/wiki/Home/_history" class="history">
+            
+          </a>
+        </div>
+    </div>
+  </div>
+  <div id="wiki-content" class="wiki-content">
+    <div class="has-rightbar">
+
+    <div id="wiki-rightbar" class="wiki-rightbar">
+      <div class="wiki-pages-box readability-sidebar boxed-group flush js-wiki-pages-box " role="navigation">
+        
+<h3 class="js-wiki-toggle-collapse wiki-auxiliary-content">
+  <svg aria-hidden="true" class="octicon octicon-triangle-down caret-expanded" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M0 5l6 6 6-6z"/></svg>
+  <svg aria-hidden="true" class="octicon octicon-triangle-right caret-collapsed" height="16" version="1.1" viewBox="0 0 6 16" width="6"><path fill-rule="evenodd" d="M0 14l6-6-6-6z"/></svg>
+  Cadre de l'étude <span class="Counter">1</span>
+</h3>
+<div class="boxed-group-inner wiki-auxiliary-content wiki-auxiliary-content-no-bg">
+
+  <ul class="wiki-pages" data-filterable-for="wiki-pages-filter" data-filterable-type="substring">
+    <li>
+      <strong><a href="/handsontable/handsontable/wiki" class="wiki-page-link">Documents de confidentialité</a></strong>
+    </li>
+    <li>
+      <strong><a href="/handsontable/handsontable/wiki/Feature-requests" class="wiki-page-link">limites de l'étude</a></strong>
+    </li>
+    <li>
+      <strong><a href="/handsontable/handsontable/wiki/How-we-use-Git-Flow" class="wiki-page-link">Contraintes de l'étude</a></strong>
+    </li>
+  </ul>
+</div>
+
+
+<h3 class="js-wiki-toggle-collapse wiki-auxiliary-content">
+  <svg aria-hidden="true" class="octicon octicon-triangle-down caret-expanded" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M0 5l6 6 6-6z"/></svg>
+  <svg aria-hidden="true" class="octicon octicon-triangle-right caret-collapsed" height="16" version="1.1" viewBox="0 0 6 16" width="6"><path fill-rule="evenodd" d="M0 14l6-6-6-6z"/></svg>
+  Orientation stratégique <span class="Counter">2</span>
+</h3>
+<div class="boxed-group-inner wiki-auxiliary-content wiki-auxiliary-content-no-bg">
+
+  <ul class="wiki-pages" data-filterable-for="wiki-pages-filter" data-filterable-type="substring">
+    <li>
+      <strong><a href="/handsontable/handsontable/wiki" class="wiki-page-link">Stratégie de l’entreprise ou du département </a></strong>
+    </li>
+    <li>
+      <strong><a href="/handsontable/handsontable/wiki/Feature-requests" class="wiki-page-link">Stratégie produit </a></strong>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+      </div>
+
+
+ 
+
+
+     
+    </div>
+
+    <div id="wiki-body" class="wiki-body gollum-markdown-content instapaper_body">
+        <div class="markdown-body">
+          
+        
+        
+        
+        <div id="sample">
+  <div id="myDiagramDiv" style="background-color: #696969; border: solid 1px black; height: 500px"></div>
+  <div>
+    <div id="myInspector">
+
+    </div>
+  </div>
+  <p>
+    This editable organizational chart sample color-codes the Nodes according to the tree level in the hierarchy.
+  </p>
+  <p>
+    Double click on a node in order to add a person.
+  </p>
+  <p>
+    Drag a node onto another in order to change relationships.
+    You can also draw a link from a node's background to other nodes that have no "boss".
+  </p>
+  <p>
+    Select a node to edit/update node data values. This sample uses the <a href="../extensions/dataInspector.html">Data Inspector</a> extension to display and modify Part data.
+  </p>
+  <p>
+    To learn how to build an org chart from scratch with GoJS, see the <a href="../learn/index.html">Getting Started tutorial</a>.
+  </p>
+  <div>
+    <div>
+      <button id="SaveButton" onclick="save()">Write</button>
+      <button onclick="load()">Read</button>
+      Diagram Model saved in JSON format:
+    </div>
+    <textarea id="mySavedModel" style="width:100%;height:250px">
+{ "class": "go.TreeModel",
+  "nodeDataArray": [
+{"key":"1", "name":"Stella Payne Diaz", "Achats":"CEO"},
+{"key":"2", "name":"Luke Warm", "Achats":"1450","Quantité":"10","Poids":"20","parent":"1"},
+{"key":"3", "name":"Meg Meehan Hoffa", "Achats":"Sales", "parent":"2"},
+{"key":"4", "name":"Peggy Flaming", "Achats":"VP Engineering", "parent":"1"},
+{"key":"5", "name":"Saul Wellingood", "Achats":"Manufacturing", "parent":"4"},
+{"key":"6", "name":"Al Ligori", "Achats":"Marketing", "parent":"2"},
+{"key":"7", "name":"Dot Stubadd", "Achats":"Sales Rep", "parent":"3"},
+{"key":"8", "name":"Les Ismore", "Achats":"Project Mgr", "parent":"5"},
+{"key":"9", "name":"April Lynn Parris", "Achats":"Events Mgr", "parent":"6"},
+{"key":"10", "name":"Xavier Breath", "Achats":"Engineering", "parent":"4"},
+{"key":"11", "name":"Anita Hammer", "Achats":"Process", "parent":"5"},
+{"key":"12", "name":"Billy Aiken", "Achats":"Software", "parent":"10"},
+{"key":"13", "name":"Stan Wellback", "Achats":"Testing", "parent":"10"},
+{"key":"14", "name":"Marge Innovera", "Achats":"Hardware", "parent":"10"},
+{"key":"15", "name":"Evan Elpus", "Achats":"Quality", "parent":"5"},
+{"key":"16", "name":"Lotta B. Essen", "Achats":"Sales Rep", "parent":"3"}
+ ]
+}
+    </textarea>
+  </div>
+</div>
+</div>
+
+    </div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+  <div class="modal-backdrop js-touch-events"></div>
+</div>
+
+        <div class="footer container-lg p-responsive mt-6" role="contentinfo">
+  <div class="d-flex flex-wrap py-5 mb-5">
+    <div class="col-12 col-md-2 mb-3">
+      <svg aria-hidden="true" class="octicon octicon-logo-github" height="24" version="1.1" viewBox="0 0 45 16" width="67"><path fill-rule="evenodd" d="M18.53 12.03h-.02c.009 0 .015.01.024.011h.006l-.01-.01zm.004.011c-.093.001-.327.05-.574.05-.78 0-1.05-.36-1.05-.83V8.13h1.59c.09 0 .16-.08.16-.19v-1.7c0-.09-.08-.17-.16-.17h-1.59V3.96c0-.08-.05-.13-.14-.13h-2.16c-.09 0-.14.05-.14.13v2.17s-1.09.27-1.16.28c-.08.02-.13.09-.13.17v1.36c0 .11.08.19.17.19h1.11v3.28c0 2.44 1.7 2.69 2.86 2.69.53 0 1.17-.17 1.27-.22.06-.02.09-.09.09-.16v-1.5a.177.177 0 0 0-.146-.18zm23.696-2.2c0-1.81-.73-2.05-1.5-1.97-.6.04-1.08.34-1.08.34v3.52s.49.34 1.22.36c1.03.03 1.36-.34 1.36-2.25zm2.43-.16c0 3.43-1.11 4.41-3.05 4.41-1.64 0-2.52-.83-2.52-.83s-.04.46-.09.52c-.03.06-.08.08-.14.08h-1.48c-.1 0-.19-.08-.19-.17l.02-11.11c0-.09.08-.17.17-.17h2.13c.09 0 .17.08.17.17v3.77s.82-.53 2.02-.53l-.01-.02c1.2 0 2.97.45 2.97 3.88zm-8.72-3.61H33.84c-.11 0-.17.08-.17.19v5.44s-.55.39-1.3.39-.97-.34-.97-1.09V6.25c0-.09-.08-.17-.17-.17h-2.14c-.09 0-.17.08-.17.17v5.11c0 2.2 1.23 2.75 2.92 2.75 1.39 0 2.52-.77 2.52-.77s.05.39.08.45c.02.05.09.09.16.09h1.34c.11 0 .17-.08.17-.17l.02-7.47c0-.09-.08-.17-.19-.17zm-23.7-.01h-2.13c-.09 0-.17.09-.17.2v7.34c0 .2.13.27.3.27h1.92c.2 0 .25-.09.25-.27V6.23c0-.09-.08-.17-.17-.17zm-1.05-3.38c-.77 0-1.38.61-1.38 1.38 0 .77.61 1.38 1.38 1.38.75 0 1.36-.61 1.36-1.38 0-.77-.61-1.38-1.36-1.38zm16.49-.25h-2.11c-.09 0-.17.08-.17.17v4.09h-3.31V2.6c0-.09-.08-.17-.17-.17h-2.13c-.09 0-.17.08-.17.17v11.11c0 .09.09.17.17.17h2.13c.09 0 .17-.08.17-.17V8.96h3.31l-.02 4.75c0 .09.08.17.17.17h2.13c.09 0 .17-.08.17-.17V2.6c0-.09-.08-.17-.17-.17zM8.81 7.35v5.74c0 .04-.01.11-.06.13 0 0-1.25.89-3.31.89-2.49 0-5.44-.78-5.44-5.92S2.58 1.99 5.1 2c2.18 0 3.06.49 3.2.58.04.05.06.09.06.14L7.94 4.5c0 .09-.09.2-.2.17-.36-.11-.9-.33-2.17-.33-1.47 0-3.05.42-3.05 3.73s1.5 3.7 2.58 3.7c.92 0 1.25-.11 1.25-.11v-2.3H4.88c-.11 0-.19-.08-.19-.17V7.35c0-.09.08-.17.19-.17h3.74c.11 0 .19.08.19.17z"/></svg>
+      <p class="text-gray alt-text-small">
+        &copy; 2017
+      </p>
+    </div>
+    <div class="col-6 col-sm-4 col-md-2 mb-3 pr-3">
+      <h4 class="mb-2">Features</h4>
+      <ul class="list-style-none text-gray">
+        <li class="lh-condensed mb-2"><a href="features.html#code-review" class="muted-link alt-text-small">Code review</a></li>
+        <li class="lh-condensed mb-2"><a href="features.html#project-management" class="muted-link alt-text-small">Project management</a></li>
+        <li class="lh-condensed mb-2"><a href="features.html#community-management" class="muted-link alt-text-small">Community</a></li>
+        <li class="lh-condensed mb-2"><a href="features.html#documentation" class="muted-link alt-text-small no-wrap">Documentation</a></li>
+        <li class="lh-condensed mb-2"><a href="features.html#code-hosting" class="muted-link alt-text-small">Code hosting</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-sm-4 col-md-2 mb-3 pr-3">
+      <h4 class="mb-2">Platform</h4>
+      <ul class="list-style-none">
+        <li class="lh-condensed mb-2"><a href="https://atom.io/" class="muted-link alt-text-small">Atom</a></li>
+        <li class="lh-condensed mb-2"><a href="http://electron.atom.io/" class="muted-link alt-text-small">Electron</a></li>
+        <li class="lh-condensed mb-2"><a href="https://desktop.github.com/" class="muted-link alt-text-small">GitHub Desktop</a></li>
+        <li class="lh-condensed mb-2"><a href="https://developer.github.com/" data-ga-click="Footer, go to api, text:api" class="muted-link alt-text-small">Developers</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-sm-4 col-md-2 mb-3 pr-3">
+      <h4 class="mb-2">Community</h4>
+      <ul class="list-style-none">
+        <li class="lh-condensed mb-2"><a href="personal.html" class="muted-link alt-text-small">Personal</a></li>
+        <li class="lh-condensed mb-2"><a href="open-source.html" class="muted-link alt-text-small">Open source</a></li>
+        <li class="lh-condensed mb-2"><a href="business.html" class="muted-link alt-text-small">For Business</a></li>
+        <li class="lh-condensed mb-2"><a href="https://education.github.com/" class="muted-link alt-text-small">For Education</a></li>
+        <li class="lh-condensed mb-2"><a href="https://community.github.com/" class="muted-link alt-text-small">Sponsorships</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-sm-4 col-md-2 mb-3 pr-3">
+      <h4 class="mb-2">Company</h4>
+      <ul class="list-style-none">
+        <li class="lh-condensed mb-2"><a href="about.html" class="muted-link alt-text-small" data-ga-click="Footer, go to about, text:about">About</a></li>
+        <li class="lh-condensed mb-2"><a href="blog.html" class="muted-link alt-text-small" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li class="lh-condensed mb-2"><a href="business/customers.html" class="muted-link alt-text-small">Customers</a></li>
+        <li class="lh-condensed mb-2"><a href="about/careers.html" class="muted-link alt-text-small">Careers</a></li>
+        <li class="lh-condensed mb-2"><a href="about/press.html" class="muted-link alt-text-small">Press</a></li>
+        <li class="lh-condensed mb-2"><a href="https://shop.github.com/" class="muted-link alt-text-small">Shop</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-sm-4 col-md-2 mb-3 pr-3">
+      <h4 class="mb-2">Resources</h4>
+      <ul class="list-style-none">
+        <li class="lh-condensed mb-2"><a href="contact.html" class="muted-link alt-text-small" data-ga-click="Footer, go to contact, text:contact">Contact GitHub</a></li>
+        <li class="lh-condensed mb-2"><a href="https://help.github.com/" class="muted-link alt-text-small" data-ga-click="Footer, go to help, text:help">Help</a></li>
+        <li class="lh-condensed mb-2"><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status" class="muted-link alt-text-small">Status</a></li>
+        <li class="lh-condensed mb-2"><a href="https://help.github.com/articles/github-terms-of-service/" class="muted-link alt-text-small" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li class="lh-condensed mb-2"><a href="https://help.github.com/articles/github-privacy-statement/" class="muted-link alt-text-small" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li class="lh-condensed mb-2"><a href="https://help.github.com/articles/github-security/" class="muted-link alt-text-small" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        <li class="lh-condensed mb-2"><a href="https://services.github.com/" class="muted-link alt-text-small">Training</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+    <button type="button" class="flash-close js-flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+    </button>
+    You can't perform that action at this time.
+  </div>
+
+
+    <script crossorigin="anonymous" src="../assets-cdn.github.com/assets/compat-91f98c37fc84eac24836eec2567e9912742094369a04c4eba6e3cd1fa18902d9.js"></script>
+    <script crossorigin="anonymous" src="../assets-cdn.github.com/assets/frameworks-143a6f74056707f6b14875ec6ca4f2eb16f5d0781f7e1cb82bd441b4438b43d3.js"></script>
+    
+    <script async="async" crossorigin="anonymous" src="../assets-cdn.github.com/assets/github-a3db37c169c8510815dedb0e9bbfda110628b0b4a4fb9652b95642f8e0b0fff2.js"></script>
+    
+    
+    
+    
+  <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner d-none">
+    <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+    <span class="signed-in-tab-flash">You signed in with another tab or window. <a href="#">Reload</a> to refresh your session.</span>
+    <span class="signed-out-tab-flash">You signed out in another tab or window. <a href="#">Reload</a> to refresh your session.</span>
+  </div>
+  <div class="facebox" id="facebox" style="display:none;">
+  <div class="facebox-popup">
+    <div class="facebox-content" role="dialog" aria-labelledby="facebox-header" aria-describedby="facebox-description">
+    </div>
+    <button type="button" class="facebox-close js-facebox-close" aria-label="Close modal">
+      <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+    </button>
+  </div>
+</div>
+
+
+  </body>
+
+<!-- Mirrored from github.com/marketplace by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Sep 2017 20:49:19 GMT -->
+</html>
+
