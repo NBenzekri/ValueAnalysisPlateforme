@@ -36,6 +36,7 @@ CREATE TABLE membre(
         idMembre     int (11) Auto_increment  NOT NULL ,
         nomMembre    Varchar (255) ,
         prenomMembre Varchar (255) ,
+		usernameMembre VARCHAR(255),
         mdpMembre    Varchar (255) ,
         emailMembre  Varchar (255) ,
         telMembre    Varchar (255) ,

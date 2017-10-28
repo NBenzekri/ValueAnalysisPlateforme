@@ -36,10 +36,11 @@ CREATE TABLE membre(
         idMembre     int (11) Auto_increment  NOT NULL ,
         nomMembre    Varchar (255) ,
         prenomMembre Varchar (255) ,
+        usernameMembre Varchar (255),
         mdpMembre    Varchar (255) ,
         emailMembre  Varchar (255) ,
         telMembre    Varchar (255) ,
-        PRIMARY KEY (idMembre )
+        PRIMARY KEY (idMembre,usernameMembre,emailMembre )
 )ENGINE=InnoDB;
 
 
@@ -115,7 +116,7 @@ CREATE TABLE tache(
         intituleT  Varchar (255) ,
         dateDebutT Date ,
         dateFinT   Date ,
-        idProjet   Int ,
+        idR        Int ,
         PRIMARY KEY (idT )
 )ENGINE=InnoDB;
 
@@ -128,8 +129,19 @@ CREATE TABLE validationprojet(
         idV      int (11) Auto_increment  NOT NULL ,
         q1       Text ,
         idProjet Int ,
-        idMembre Int ,
         PRIMARY KEY (idV )
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: QuestionValidationProjet
+#------------------------------------------------------------
+
+CREATE TABLE QuestionValidationProjet(
+        idQVP int (11) Auto_increment  NOT NULL ,
+        qst1  Varchar (255) ,
+        qst2  Varchar (255) ,
+        PRIMARY KEY (idQVP )
 )ENGINE=InnoDB;
 
 
@@ -162,9 +174,8 @@ ALTER TABLE question ADD CONSTRAINT FK_question_idRu FOREIGN KEY (idRu) REFERENC
 ALTER TABLE reeunion ADD CONSTRAINT FK_reeunion_idProjet FOREIGN KEY (idProjet) REFERENCES projet(idProjet);
 ALTER TABLE reponse ADD CONSTRAINT FK_reponse_idQ FOREIGN KEY (idQ) REFERENCES question(idQ);
 ALTER TABLE rubrique ADD CONSTRAINT FK_rubrique_idCheckliste FOREIGN KEY (idCheckliste) REFERENCES checkliste(idCheckliste);
-ALTER TABLE tache ADD CONSTRAINT FK_tache_idProjet FOREIGN KEY (idProjet) REFERENCES projet(idProjet);
+ALTER TABLE tache ADD CONSTRAINT FK_tache_idR FOREIGN KEY (idR) REFERENCES reeunion(idR);
 ALTER TABLE validationprojet ADD CONSTRAINT FK_validationprojet_idProjet FOREIGN KEY (idProjet) REFERENCES projet(idProjet);
-ALTER TABLE validationprojet ADD CONSTRAINT FK_validationprojet_idMembre FOREIGN KEY (idMembre) REFERENCES membre(idMembre);
 ALTER TABLE affectaationMembre ADD CONSTRAINT FK_affectaationMembre_idMembre FOREIGN KEY (idMembre) REFERENCES membre(idMembre);
 ALTER TABLE affectaationMembre ADD CONSTRAINT FK_affectaationMembre_idT FOREIGN KEY (idT) REFERENCES tache(idT);
 ALTER TABLE AffProjetMembre ADD CONSTRAINT FK_AffProjetMembre_idProjet FOREIGN KEY (idProjet) REFERENCES projet(idProjet);
