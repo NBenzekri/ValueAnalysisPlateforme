@@ -1,117 +1,176 @@
 <?php
 
-include('api/DB_API.php');
+include('DB_API.php');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
+//Load composer's autoloader
+require 'vendor/autoload.php';
+require 'mailBody.php';
 
 class MembreAPI
 {
-
-
     protected $servername="localhost";
     protected $username="root";
     protected $password="";
     protected $dbname = "vap1_test";
     private $conn;
-    
+    protected $Mtoken;
+    protected $errorMail = [];
     public function __construct()
     {
         $database = new Database();
         $db = $database->dbConnection($this->dbname);
         $this->conn = $db;
+        $this->Mtoken = "";
     }
 
-    public function runQuery($sql)
-    {
+    public function runQuery($sql){
         $stmt = $this->conn->prepare($sql);
         return $stmt;
     }
-    public function is_loggedin()
-    {
+    public function is_loggedin(){
         if(isset($_SESSION['user_session']))
         {
-            return true;
+          //  return true;
         }
+        return false;
     }
-    public function redirect($url)
-    {
+    public function doLogout(){
+        session_destroy();
+        unset($_SESSION['user_session']);
+        return true;
+    }
+    public function redirect($url)    {
         header("Location: $url");
     }
-    public function insertMembre($DB, $nomMembre, $prenomMembre,$username, $mdpMembre, $email, $membreEntreprise){
+
+    public function getToken(){
+        return $this->Mtoken;
+    }
+    public function setToken($token){
+        $this->Mtoken = $token;
+    }
+    public function insertMembre($nomMembre, $prenomMembre, $mdpasseMembre, $email, $idEntreprise){
         $DB = $this->dbname;
         try {
-            $sql3 = "insert into membre (`idMembre`, `nomMembre`, `prenomMembre`, `mdpMembre`, `emailMembre`, `idEntreprise`) values(NULL,'$nomMembre','$prenomMembre','$mdpMembre','$email','$membreEntreprise')";
-            $conn3 = new PDO("mysql:host=$this->servername;dbname=$DB", $this->username,$this->password);
+            //create a random key
+            $mdpMembre = md5($mdpasseMembre);
+            $key = $nomMembre . $email . date('mY');
+            $token = md5($key);
+            $sql3 = "insert into membre (`nomMembre`, `prenomMembre`, `mdpMembre`, `emailMembre`,`activationToken`, `idEntreprise`) values('$nomMembre','$prenomMembre','$mdpMembre','$email','$token','$idEntreprise')";
+            $conn3 = new PDO("mysql:host=$this->servername;dbname=$this->dbname", $this->username,$this->password);
+            $this->setToken($token);
             $stmt = $conn3->prepare($sql3);
             $stmt->execute();
+            $id = $conn3->lastInsertId();
             unset($conn3);
-            echo "success";
             return $stmt;
         } catch (PDOException $es) {
-            echo "error!!";
+            $this->errorMail[] = "insert Membre Error:";
         }
     }
+    public function sendConfirmationEmail($password,$name,$prenomMembre, $email,$idEntreprise, $token){
 
-    public function getMembres($DB, $extras = '') {
-        $DB = $this->dbname;
-        global $dbconnect;
-        $conn = $dbconnect->dbConnection($DB);
-        if($conn!= null){
-            $query = @sprintf("SELECT * FROM membre %s", $extras) ;
-            $res = $conn->query($query);
-
-
-
-        }
-    }
-
-    public function getMembres_byID($DB, $idMembre)
-    {
-        $DB = $this->dbname;
-    }
-
-    public function selectMembre($DB, $mdpMembre, $email)
-    {
-        $DB = $this->dbname;
+        $mail = new PHPMailer(true);
         try {
-            $sql3 = "select * from membre where emailMembre='$email' and mdpMembre='$mdpMembre'";
-            $conn3 = new PDO("mysql:host=$this->servername;dbname=$DB", $this->username, $this->password);
-            $result = $conn3->query($sql3);
-            if ($result->rowCount() == 1) echo "done";
-            unset($result);
-        } catch (PDOException $es) {
-            echo "get membre error" . $es->getMessage();
-        }
-    }
+            $sql = "SELECT * FROM entreprise WHERE idEntreprise=:idEntre";
+            $stmt = $this->runQuery($sql);
+            $stmt->execute(array(':idEntre'=>$idEntreprise));
+            $row=$stmt->fetch(PDO::FETCH_ASSOC);
+            $NomEntreprise =  $row['nomEntreprise'];
+        $subject = 'Cloud-VAP Signup | Verification'; // Give the email a subject 
+        $link =  "http://localhost/ValueAnalysisPlateforme/github.com/verify.php?email=".$email."&idEntreprise=".$idEntreprise."&token=".$token;
+    //Server settings
+    $mail->SMTPDebug = 0;           // Enable verbose debug output, show debugging 1 sever, 2 client and server, 0 none
+    $mail->isSMTP();         // Set mailer to use SMTP
+    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = "cloudvapensias@gmail.com";
+    $mail->Password = "@cloudvapensias";                         // SMTP password
+    $mail->SMTPSecure = 'tls';              // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = 587;         // TCP port to connect to or for ssl 465
 
+    //Recipients
+    $mail->setFrom('noreply@Cloud-VAP.com', 'Cloud-VAP');
+    $mail->addAddress($email, $name);     // Add a recipient
 
-    public function updateMembre($Membreemail, $DB, $nomMembre, $prenomMembre, $mdpMembre, $emailMembre, $telMembre)
-    {
-        $DB = $this->dbname;
-        try {
-            $conn3 = new PDO("mysql:host=$this->servername;dbname=$DB", $this->username, $this->password);
-            $sql1 = "select * from membre where emailMembre='$Membreemail'";
-            $stmt = $conn3->prepare($sql1);
-            $result = $conn3->query($sql1);
-            if ($result->rowCount() > 0) {
-                $row = $conn3->fetch();
-                $id = $row[0];
-                echo "$id";
-            }
-            $sql3 = "update membre set nomMembre ='$nomMembre' and prenomMembre = '$prenomMembre' and mdpMembre = '$mdpMembre' and emailMembre = '$emailMembre' and telMembre = '$telMembre' where idMembre = '$id";
-            $stmt = $conn3->prepare($sql3);
-            echo "zzz";
-            $stmt->execute();
-            unset($conn3);
-            unset($result);
-        } catch (PDOException $es) {
-            echo "Error connection";
-        }
-    }
+    //Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = $subject;
+    $mail->Body    = htmlMailBody($password,$name,$prenomMembre, $email,$row['nomEntreprise'], $link);
+    $mail->send();
+    return true;
+} catch (Exception $e) {
+    $this->errorMail[] = "Message could not be sent.<br>Mailer Error: ". $mail->ErrorInfo;
+    return false;
+}
 
 }
 
-$mbre = new MembreAPI();
+public function getMembres($DB, $extras = '') {
+    $DB = $this->dbname;
+    global $dbconnect;
+    $conn = $dbconnect->dbConnection($DB);
+    if($conn!= null){
+        $query = @sprintf("SELECT * FROM membre %s", $extras) ;
+        $res = $conn->query($query);
+
+
+
+    }
+}
+
+public function getMembres_byID($DB, $idMembre)    
+{
+    $DB = $this->dbname;
+}
+
+public function selectMembre($DB, $mdpMembre, $email)
+{
+    $DB = $this->dbname;
+    try {
+        $sql3 = "select * from membre where emailMembre='$email' and mdpMembre='$mdpMembre'";
+        $conn3 = new PDO("mysql:host=$this->servername;dbname=$DB", $this->username, $this->password);
+        $result = $conn3->query($sql3);
+        if ($result->rowCount() == 1) echo "done";
+        unset($result);
+    } catch (PDOException $es) {
+        echo "get membre error" . $es->getMessage();
+    }
+}
+
+
+public function updateMembre($Membreemail, $DB, $nomMembre, $prenomMembre, $mdpMembre, $emailMembre, $telMembre)
+{
+    $DB = $this->dbname;
+    try {
+        $conn3 = new PDO("mysql:host=$this->servername;dbname=$DB", $this->username, $this->password);
+        $sql1 = "select * from membre where emailMembre='$Membreemail'";
+        $stmt = $conn3->prepare($sql1);
+        $result = $conn3->query($sql1);
+        if ($result->rowCount() > 0) {
+            $row = $conn3->fetch();
+            $id = $row[0];
+            echo "$id";
+        }
+        $sql3 = "update membre set nomMembre ='$nomMembre' and prenomMembre = '$prenomMembre' and mdpMembre = '$mdpMembre' and emailMembre = '$emailMembre' and telMembre = '$telMembre' where idMembre = '$id";
+        $stmt = $conn3->prepare($sql3);
+        echo "zzz";
+        $stmt->execute();
+        unset($conn3);
+        unset($result);
+    } catch (PDOException $es) {
+        echo "Error connection";
+    }
+}
+
+}
+
+/*$mbre = new MembreAPI();
+$mbre->sendConfirmationEmail("7410","BEN ZEKRI","Nouriddin", "nouriddin.benzekri@gmail.com",1, "1178692fc49d8631a6aec13891b0522d");*/
+
 /*$az = new DB_API();
 $az->dbConnection("vap1_test");*/ 
 //$mbre->insertMembre("projet", "ben zekri","nourreddine","nbenz", "azerty","noure@gmail.com","0645342466");

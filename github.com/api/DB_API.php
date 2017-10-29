@@ -34,7 +34,7 @@ class Database
             echo "DATABASE $DB has been deleted succefuly";          
             unset($conn);
         } catch (PDOException $e) {
-            echo "<br> DB error". $e->getMessage();
+            echo                "<br> DB error". $e->getMessage();
         }
     }
     public function dbConnection($dbName){
