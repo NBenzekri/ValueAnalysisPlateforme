@@ -2,10 +2,10 @@
 session_start();
 require_once('api/MembreAPI.php');
 $membre = new MembreAPI();
-if($membre->is_loggedin()!="")
+/*if($membre->is_loggedin()!="")
 {
   $membre->redirect('eoa.php');
-}
+}*/
 if(isset($_POST['btn_signup']))
 {
   $membreName = strip_tags($_POST['nom_singup']);
@@ -38,7 +38,7 @@ if(isset($_POST['btn_signup']))
   { 
     try
     {
-      $sql = "SELECT nomMembre, prenomMembre, emailMembre FROM membre WHERE nomMembre=:nomMembre OR prenomMembre=:prenomMembre OR emailMembre =:emailMembre";
+      $sql = "SELECT nomMembre, prenomMembre, emailMembre FROM membre WHERE (nomMembre=:nomMembre AND prenomMembre=:prenomMembre ) OR emailMembre =:emailMembre";
       $stmt = $membre->runQuery($sql);
       $stmt->execute(array(':nomMembre'=>$membreName, ':prenomMembre'=>$membrePrenom, ':emailMembre'=>$membreEmail));
       $row=$stmt->fetch(PDO::FETCH_ASSOC);
@@ -125,7 +125,7 @@ if(isset($_POST['btn_signin'])){
 
 <body class="logged-out env-production page-responsive min-width-0 f4">
 
-  <?php include 'api/navbar.html'; ?>
+  <?php include 'api/navbar.php'; ?>
 
   <div id="js-flash-container">
   </div>

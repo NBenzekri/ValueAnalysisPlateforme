@@ -31,7 +31,7 @@ class MembreAPI
         return $stmt;
     }
     public function is_loggedin(){
-        if(isset($_SESSION['user_session']))
+        if(isset($_SESSION['idMembre']))
         {
             return true;
         }
@@ -39,9 +39,17 @@ class MembreAPI
     }
     public function doLogout(){
         session_destroy();
-        unset($_SESSION['user_session']);
+        unset($_SESSION['idMembre']);
         return true;
     }
+    public function logout()
+{
+    unset($_SESSION['idMembre']);
+    session_destroy();
+    echo "Disconnected";
+    return true;
+}
+
     public function redirect($url)    {
         header("Location: $url");
     }
@@ -119,32 +127,32 @@ class MembreAPI
             $stmt->execute(array(':idEntre'=>$idEntreprise));
             $row=$stmt->fetch(PDO::FETCH_ASSOC);
             $NomEntreprise =  $row['nomEntreprise'];
-        $subject = 'Cloud-VAP Signup | Verification'; // Give the email a subject 
-        $link =  "http://localhost/ValueAnalysisPlateforme/github.com/verify.php?email=".$email."&idEntreprise=".$idEntreprise."&token=".$token;
-    //Server settings
-    $mail->SMTPDebug = 0;           // Enable verbose debug output, show debugging 1 sever, 2 client and server, 0 none
-    $mail->isSMTP();         // Set mailer to use SMTP
-    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-    $mail->Username = "cloudvapensias@gmail.com";
-    $mail->Password = "@cloudvapensias";                         // SMTP password
-    $mail->SMTPSecure = 'tls';              // Enable TLS encryption, `ssl` also accepted
-    $mail->Port = 587;         // TCP port to connect to or for ssl 465
+            $subject = 'Cloud-VAP Signup | Verification'; // Give the email a subject 
+            $link =  "http://localhost/ValueAnalysisPlateforme/github.com/verify.php?email=".$email."&idEntreprise=".$idEntreprise."&token=".$token;
+            //Server settings
+            $mail->SMTPDebug = 0;           // Enable verbose debug output, show debugging 1 sever, 2 client and server, 0 none
+            $mail->isSMTP();         // Set mailer to use SMTP
+            $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->Username = "cloudvapensias@gmail.com";
+            $mail->Password = "@cloudvapensias";                         // SMTP password
+            $mail->SMTPSecure = 'tls';              // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 587;         // TCP port to connect to or for ssl 465
 
-    //Recipients
-    $mail->setFrom('noreply@Cloud-VAP.com', 'Cloud-VAP');
-    $mail->addAddress($email, $name);     // Add a recipient
+            //Recipients
+            $mail->setFrom('noreply@Cloud-VAP.com', 'Cloud-VAP');
+            $mail->addAddress($email, $name);     // Add a recipient
 
-    //Content
-    $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = $subject;
-    $mail->Body    = htmlMailBody($password,$name,$prenomMembre, $email,$row['nomEntreprise'], $link);
-    $mail->send();
-    return true;
-} catch (Exception $e) {
-    $this->errorMail[] = "Message could not be sent.<br>Mailer Error: ". $mail->ErrorInfo;
-    return false;
-}
+            //Content
+            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->Subject = $subject;
+            $mail->Body    = htmlMailBody($password,$name,$prenomMembre, $email,$row['nomEntreprise'], $link);
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            $this->errorMail[] = "Message could not be sent.<br>Mailer Error: ". $mail->ErrorInfo;
+            return false;
+        }
 
 }
 
@@ -205,13 +213,7 @@ public function updateMembre($Membreemail, $DB, $nomMembre, $prenomMembre, $mdpM
     }
 }
 
-public function logout()
-{
-    unset($_SESSION['idMembre']);
-    session_destroy();
-    echo "Disconnected";
-    return true;
-}
+
 
 
 }
