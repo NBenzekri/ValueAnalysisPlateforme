@@ -8,101 +8,10 @@
 <!-- Mirrored from github.com/explore by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Sep 2017 20:48:11 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
-  <meta charset="utf-8">
-  <link rel="dns-prefetch" href="https://assets-cdn.github.com/">
-  <link rel="dns-prefetch" href="https://avatars0.githubusercontent.com/">
-  <link rel="dns-prefetch" href="https://avatars1.githubusercontent.com/">
-  <link rel="dns-prefetch" href="https://avatars2.githubusercontent.com/">
-  <link rel="dns-prefetch" href="https://avatars3.githubusercontent.com/">
-  <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com/">
-  <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/">
 
-
-
-  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/frameworks-bedfc518345498ab3204d330c1727cde7e733526a09cd7df6867f6a231565091.css" media="all" rel="stylesheet" />
-  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/github-a1f1041276ec59b7ad51bdbd35d2d73f15f99aebe2686a60e9cd9f705b57d220.css" media="all" rel="stylesheet" />
+  <title>Démarche d'Analyse de la valeur | Orientation de l'action</title>
+ <?php include 'head.html'; ?>
   
-  
-  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/site-877643c520258c4fa15ac8d1664d84efd0e3db56f5e544ccac58da0e50489904.css" media="all" rel="stylesheet" />
-  
-  
-  
-
-  <meta name="viewport" content="width=device-width">
-  
-  <title>AV · Orientation de l'action</title>
-  <link rel="search" type="application/opensearchdescription+xml" href="opensearch.xml" title="GitHub">
-  <link rel="fluid-icon" href="fluidicon.png" title="GitHub">
-  <meta property="fb:app_id" content="1401488693436528">
-
-  <meta property="og:url" content="index.php">
-  <meta property="og:site_name" content="GitHub">
-  <meta property="og:title" content="Build software better, together">
-  <meta property="og:description" content="GitHub is where people build software. More than 24 million people use GitHub to discover, fork, and contribute to over 67 million projects.">
-  <meta property="og:image" content="../assets-cdn.github.com/images/modules/open_graph/github-logo.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="1200">
-  <meta property="og:image" content="../assets-cdn.github.com/images/modules/open_graph/github-mark.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="620">
-  <meta property="og:image" content="../assets-cdn.github.com/images/modules/open_graph/github-octocat.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="620">
-
-
-  <link rel="assets" href="https://assets-cdn.github.com/">
-  
-  <meta name="pjax-timeout" content="1000">
-  
-  <meta name="request-id" content="CBAB:0C50:2D41C2E:4FE6D47:59C81978" data-pjax-transient>
-  
-
-  <meta name="selected-link" value="explore_main" data-pjax-transient>
-
-  <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
-  <meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
-  <meta name="google-analytics" content="UA-3769691-2">
-
-  <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="https://collector.githubapp.com/github-external/browser_event" name="octolytics-event-url" /><meta content="CBAB:0C50:2D41C2E:4FE6D47:59C81978" name="octolytics-dimension-request_id" /><meta content="iad" name="octolytics-dimension-region_edge" /><meta content="iad" name="octolytics-dimension-region_render" />
-
-
-
-
-
-  <meta class="js-ga-set" name="dimension1" content="Logged Out">
-
-
-  
-
-  <meta name="hostname" content="github.com">
-  <meta name="user-login" content="">
-
-  <meta name="expected-hostname" content="github.com">
-  <meta name="js-proxy-site-detection-payload" content="ZjljNmI2ZGVhYjUyZWE2NTFhOGI4MzQxODE2MzNhODk5Y2IzNzQ2MDU1OTU3NGIzNTA4NWM2ZDU1N2NmYmY0NXx7InJlbW90ZV9hZGRyZXNzIjoiNDEuMjUwLjE2NS4xNiIsInJlcXVlc3RfaWQiOiJDQkFCOjBDNTA6MkQ0MUMyRTo0RkU2RDQ3OjU5QzgxOTc4IiwidGltZXN0YW1wIjoxNTA2Mjg1OTQ1LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
-
-
-  <meta name="html-safe-nonce" content="c6346ba7bf44c1b7ff3289b3cf3a071898ac6b67">
-
-  <meta http-equiv="x-pjax-version" content="91fbc80bd47c6773a7a0b82ce6f50214">
-  
-
-  <meta name="viewport" content="width=device-width">
-  <link crossorigin="anonymous" href="../assets-cdn.github.com/assets/site-877643c520258c4fa15ac8d1664d84efd0e3db56f5e544ccac58da0e50489904.css" media="all" rel="stylesheet" />
-
-
-
-
-  <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
-
-  <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
-
-  <link rel="mask-icon" href="https://assets-cdn.github.com/pinned-octocat.svg" color="#000000">
-  <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
-
-  <meta name="theme-color" content="#1e2327">
 
 
 
@@ -110,99 +19,11 @@
 
 <body class="logged-out env-production page-responsive min-width-0">
   
-
-  <div class="position-relative js-header-wrapper ">
-    <a href="#start-of-content" tabindex="1" class="px-2 py-4 show-on-focus js-skip-to-content">Skip to content</a>
-    <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
-
-    
-    
-    
-
-
-
-    <header class="Header header-logged-out js-details-container Details position-relative f4 py-3" role="banner">
-      <div class="container-lg d-lg-flex p-responsive">
-        <div class="d-flex flex-justify-between flex-items-center">
-          <a class="header-logo-invertocat my-0" href="index.php" aria-label="Homepage" data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
-            <svg aria-hidden="true" class="octicon octicon-mark-github" height="32" version="1.1" viewBox="0 0 16 16" width="32"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          </a>
-
-          <button class="btn-link d-lg-none mt-1 js-details-target" type="button" aria-label="Toggle navigation" aria-expanded="false">
-            <svg aria-hidden="true" class="octicon octicon-three-bars text-white" height="24" version="1.1" viewBox="0 0 12 16" width="18"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"/></svg>
-          </button>
-        </div>
-
-        <div class="HeaderMenu HeaderMenu--bright d-lg-flex flex-justify-between flex-auto">
-          <nav class="mt-3 mt-lg-0">
-            <ul class="d-lg-flex list-style-none">
-              <li class="ml-lg-2">
-                <a href="features.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:features" data-selected-links="/features /features/project-management /features/code-review /features/project-management /features/integrations /features">
-                  Features
-                </a>              </li>
-                <li class="ml-lg-4">
-                  <a href="business.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:business" data-selected-links="/business /business/security /business/customers /business">
-                    Business
-                  </a>              </li>
-
-                  <li class="ml-lg-4">
-                    <a href="explore.html" class="js-selected-navigation-item selected HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:explore" data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore">
-                      Explore
-                    </a>              </li>
-
-                    <li class="ml-lg-4">
-                      <a href="marketplace.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:marketplace" data-selected-links=" /marketplace">
-                        Marketplace
-                      </a>              </li>
-                      <li class="ml-lg-4">
-                        <a href="pricing.html" class="js-selected-navigation-item HeaderNavlink px-0 py-3 py-lg-2 m-0" data-ga-click="Header, click, Nav menu - item:pricing" data-selected-links="/pricing /pricing/developer /pricing/team /pricing/business-hosted /pricing/business-enterprise /pricing">
-                          Pricing
-                        </a>              </li>
-                      </ul>
-                    </nav>
-
-                    <div class="d-lg-flex">
-                      <div class="d-lg-flex flex-items-center mr-lg-3">
-                        <div class="header-search   js-site-search" role="search">
-                          <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="https://github.com/search" class="js-site-search-form" data-unscoped-search-url="/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
-                            <label class="form-control header-search-wrapper js-chromeless-input-container">
-                              <a href="explore.html" class="header-search-scope no-underline">/explore</a>
-                              <input type="text"
-                              class="form-control header-search-input js-site-search-focus "
-                              data-hotkey="s"
-                              name="q"
-                              value=""
-                              placeholder="Search GitHub"
-                              aria-label="Search GitHub"
-                              data-unscoped-placeholder="Search GitHub"
-                              data-scoped-placeholder="Search"
-                              autocapitalize="off">
-                              <input type="hidden" class="js-site-search-type-field" name="type" >
-                            </label>
-                          </form></div>
-
-                        </div>
-
-                        <span class="d-block d-lg-inline-block">
-                          <div class="HeaderNavlink px-0 py-2 m-0">
-                            <a class="text-bold text-white no-underline" href="loginf87c.html?return_to=%2Fexplore" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">Sign in</a>
-                            <span class="text-gray">or</span>
-                            <a class="text-bold text-white no-underline" href="joinaebb.html?source=header" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up">Sign up</a>
-                          </div>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </header>
-
-
-              </div>
-
-              <div id="start-of-content" class="show-on-focus"></div>
-
-              <div id="js-flash-container">
-              </div>
-
+<?php include 'api/navbar.html'; ?>
+ 
+<br>
+<br>
+<br>
 
 
               <div role="main">
@@ -217,6 +38,7 @@
                  <div class="container-lg p-responsive text-center clearfix">
                   
                    <div class="text-center mt-1 mx-auto mb-5">
+                    <h3> <?php echo "Bonjour ".$_SESSION['nomMembre']; ?></h3>
                     <h2 class="f1 text-normal mb-1">Démarche d'Analyse de la valeur </h2>
 
                     

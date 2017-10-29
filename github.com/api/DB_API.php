@@ -2,11 +2,13 @@
 
 class Database
 {
-
     protected $servername="localhost";
     protected $username="root";
     protected $password="";
+    public function __construct()
+    {
 
+    }
 
     public function CreateDatabase($DB){
         try {
@@ -43,11 +45,11 @@ class Database
         {
             $this->conn = new PDO("mysql:host=" . $this->servername . ";dbname=" . $dbName, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-        //    echo "Connection done";  
+//           echo "Connection done";  
         }
         catch(PDOException $exception)
         {
-            echo "<br>db Connection error: " . $exception->getMessage();
+            echo "<br>Database :db Connection error: " . $exception->getMessage();
         }
         return $this->conn;
     }

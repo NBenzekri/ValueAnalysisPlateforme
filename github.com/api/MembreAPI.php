@@ -33,7 +33,7 @@ class MembreAPI
     public function is_loggedin(){
         if(isset($_SESSION['user_session']))
         {
-          //  return true;
+            return true;
         }
         return false;
     }
@@ -71,6 +71,45 @@ class MembreAPI
             $this->errorMail[] = "insert Membre Error:";
         }
     }
+    public function doLogin($emailMembre,$idEntreprise,$mdpMembre)
+{
+    try
+    {
+        $passmd5 = md5($mdpMembre);
+        $stmt = $this->conn->prepare("SELECT * FROM membre WHERE idEntreprise=:idEntre AND emailMembre=:umail");
+        $stmt->execute(array(':idEntre'=>$idEntreprise, ':umail'=>$emailMembre));
+        $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
+        if($stmt->rowCount() == 1)
+        {
+            if($passmd5 == $userRow['mdpMembre'])
+            {
+                $_SESSION['idMembre'] = $userRow['idMembre'];
+                $_SESSION['nomMembre'] = $userRow['nomMembre'];
+                $_SESSION['prenomMembre'] = $userRow['prenomMembre'];
+                $_SESSION['mdpMembre'] = $userRow['mdpMembre'];
+                $_SESSION['emailMembre'] = $userRow['emailMembre'];
+                $_SESSION['telMembre'] = $userRow['telMembre'];
+                $_SESSION['fonctionMembre'] = $userRow['fonctionMembre'];
+                $_SESSION['roleMembre'] = $userRow['roleMembre'];
+                $_SESSION['activationToken'] = $userRow['activationToken'];
+                $_SESSION['compteActive'] = $userRow['compteActive'];
+                echo "session ouvert";
+                echo "<br> ".$_SESSION['mdpMembre'];
+                echo "<br> ".$_SESSION['nomMembre'];
+                echo "<br> ".$_SESSION['prenomMembre']."<br>";
+                return true;
+            }
+            else
+            {   echo "password not match";
+                return false;
+            }
+        }
+    }
+    catch(PDOException $e)
+    {
+        echo $e->getMessage();
+    }
+}
     public function sendConfirmationEmail($password,$name,$prenomMembre, $email,$idEntreprise, $token){
 
         $mail = new PHPMailer(true);
@@ -166,10 +205,28 @@ public function updateMembre($Membreemail, $DB, $nomMembre, $prenomMembre, $mdpM
     }
 }
 
+public function logout()
+{
+    unset($_SESSION['idMembre']);
+    session_destroy();
+    echo "Disconnected";
+    return true;
+}
+
+
 }
 
 /*$mbre = new MembreAPI();
-$mbre->sendConfirmationEmail("7410","BEN ZEKRI","Nouriddin", "nouriddin.benzekri@gmail.com",1, "1178692fc49d8631a6aec13891b0522d");*/
+if ($mbre->doLogin("nouriddinbnz@gmail.com0",1,"74107410")) {
+   echo "login done";
+} else {
+    echo "connection failed, wrong input.<br>";
+}
+
+$mbre->logout();*/
+//echo "<br>".$_SESSION['nomMembre'];
+
+/*$mbre->sendConfirmationEmail("7410","BEN ZEKRI","Nouriddin", "nouriddin.benzekri@gmail.com",1, "1178692fc49d8631a6aec13891b0522d");*/
 
 /*$az = new DB_API();
 $az->dbConnection("vap1_test");*/ 
