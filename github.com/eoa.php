@@ -1,6 +1,11 @@
 <?php 
 session_start();
- ?>
+
+if(!$_SESSION['nomMembre'])
+{
+  header('location: index.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -11,7 +16,6 @@ session_start();
   <title>Démarche d'Analyse de la valeur | Orientation de l'action</title>
   <?php include 'head.html'; ?>
 </head>
-
 <body class="logged-out env-production page-responsive min-width-0">
 
   <?php include 'api/navbar.php'; ?>

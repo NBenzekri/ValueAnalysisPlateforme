@@ -225,11 +225,11 @@ if ($mbre->doLogin("nouriddinbnz@gmail.com0",1,"74107410")) {
     echo "connection failed, wrong input.<br>";
 }
 
-$mbre->logout();*/
+$mbre->logout();
 //echo "<br>".$_SESSION['nomMembre'];
 
-/*$mbre->sendConfirmationEmail("7410","BEN ZEKRI","Nouriddin", "nouriddin.benzekri@gmail.com",1, "1178692fc49d8631a6aec13891b0522d");*/
-
+$mbre->sendConfirmationEmail("7410","BEN ZEKRI","Nouriddin", "nouriddin.benzekri@gmail.com",1, "1178692fc49d8631a6aec13891b0522d");
+*/
 /*$az = new DB_API();
 $az->dbConnection("vap1_test");*/ 
 //$mbre->insertMembre("projet", "ben zekri","nourreddine","nbenz", "azerty","noure@gmail.com","0645342466");

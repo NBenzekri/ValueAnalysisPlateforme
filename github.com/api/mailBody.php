@@ -55,7 +55,7 @@
 				<p>Merci pour votre temps</p>
 				&#13;
 				<p class="text-center">
-					<a style=" text-decoration: none;" href="http://localhost/ValueAnalysisPlateforme/github.com">Cloud-VAP</a> &copy; 2017
+					<a style=" text-decoration: none;" href="http://localhost/ValueAnalysisPlateforme/github.com">Cloud-VAP</a> &copy; 2017 - Made with ♥ by NBENZ
 				</p>&#13;
 			</div>
 		</div>	

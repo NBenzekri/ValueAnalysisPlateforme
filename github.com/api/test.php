@@ -17,8 +17,8 @@ try {
 	$mail->SMTPSecure = 'tls'; // secure transfer enabled REQUIRED for Gmail
 	$mail->Host = "smtp.gmail.com";
 	$mail->Port = 587; // or 587
-	$mail->Username = "benz.morocco@gmail.com";
-	$mail->Password = "0661608452@benz";
+	$mail->Username = "";
+	$mail->Password = "";
 
 	    //Recipients
 	$mail->setFrom('from@cloud-vap.com', 'cloud');
